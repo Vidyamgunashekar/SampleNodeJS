@@ -4,8 +4,9 @@ phases:
     commands:
       - echo Logging in to Amazon ECR...
       - aws --version
-      - aws ecr get-login-password --region us-east-2
-      - REPOSITORY_URI=685604338324.dkr.ecr.us-east-2.amazonaws.com/questdepot
+      - REPOSITORY_DOMAIN_NAME=$(echo $AWS_ACCOUNT_ID'.dkr.ecr.us-east-2.amazonaws.com')
+      - aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin $REPOSITORY_DOMAIN_NAME
+      - REPOSITORY_URI=public.ecr.aws/f3z2q1f0/nodeapp
       - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
       - IMAGE_TAG=${COMMIT_HASH:=latest}
   build:
